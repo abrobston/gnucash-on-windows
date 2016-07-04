@@ -1,0 +1,19 @@
+version: 1.0.{build}
+clone_folder: c:\gcdev\gnucash-on-windows.git
+environment:
+  matrix:
+  - WITH_CMAKE: no
+    WITH_NINJA: no
+  - WITH_CMAKE: yes
+    WITH_NINJA: yes
+install:
+- cmd: >-
+    cscript c:\gcdev\gnucash-on-windows.git\bootstrap_win_dev.vbs //B //Nologo /silent:yes /GC_WIN_REPOS_URL:https://github.com/%APPVEYOR_REPO_NAME%.git
+
+    echo cd /c/gcdev/gnucash-on-windows.git > c:\gcdev\gnucash-on-windows.git\ci-bash-script.sh
+
+    echo ./install.sh >> c:\gcdev\gnucash-on-windows.git\ci-bash-script.sh
+
+    echo ./dist.sh >> c:\gcdev\gnucash-on-windows.git\ci-bash-script.sh
+build_script:
+- cmd: c:\gcdev\mingw\msys\1.0\bin\bash.exe -c "/c/gcdev/gnucash-on-windows.git/ci-bash-script.sh"
