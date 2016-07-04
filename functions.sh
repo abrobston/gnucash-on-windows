@@ -152,7 +152,8 @@ ENV_VARS=
 function add_to_env() {
     _SEP=`eval echo '"$'"SEPS_$2"'"'`
     _ENV=`eval echo '"$'"$2"'"'`
-    _SED=`eval echo '"s#.*'"${_SEP}$1${_SEP}"'.*##"'`
+    _SANITIZED=`echo "$1" | sed -r 's#([/.\])#\\\\\1#g'`
+    _SED=`eval echo '"s#.*'"${_SEP}${_SANITIZED}${_SEP}"'.*##"'`
     _TEST=`echo "${_SEP}${_ENV}${_SEP}" | sed "${_SED}"`
     if [ "$_TEST" ]; then
         if [ "$_ENV" ]; then
