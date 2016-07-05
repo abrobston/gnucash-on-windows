@@ -58,6 +58,11 @@ function smart_wget() {
     _UFILE=${3:-${_FILE##*=}}
     _DLD=`unix_path $2`
 
+    # PATH seems to be reset at some point during the build.
+    # Ensure that wget's likely location is in the path.
+    _MSYS_UDIR=`unix_path $MSYS_DIR`
+    add_to_env $_MSYS_UDIR/bin PATH
+
     # If the file already exists in the download directory ($2)
     # then don't do anything.  But if it does NOT exist then
     # download the file to the tmpdir and then when that completes
