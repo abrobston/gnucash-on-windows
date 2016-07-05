@@ -9,6 +9,8 @@
 [ ! "$BASH" -a -x /bin/bash ] && exec /bin/bash "$0" "$@"
 
 set -e
+set -x
+set -E
 
 function on_error() {
   setup "An error occurred, exiting."

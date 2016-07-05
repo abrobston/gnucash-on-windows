@@ -12,8 +12,8 @@ install:
 
     echo cd /c/gcdev/gnucash-on-windows.git > c:\gcdev\gnucash-on-windows.git\ci-bash-script.sh
 
-    echo ./install.sh >> c:\gcdev\gnucash-on-windows.git\ci-bash-script.sh
+    echo bash -x ./install.sh >> c:\gcdev\gnucash-on-windows.git\ci-bash-script.sh
 
-    echo ./dist.sh >> c:\gcdev\gnucash-on-windows.git\ci-bash-script.sh
+    echo bash -x ./dist.sh >> c:\gcdev\gnucash-on-windows.git\ci-bash-script.sh
 build_script:
-- cmd: c:\gcdev\mingw\msys\1.0\bin\bash.exe -c "/c/gcdev/gnucash-on-windows.git/ci-bash-script.sh"
+- cmd: c:\gcdev\mingw\msys\1.0\bin\bash.exe -x -c "/c/gcdev/gnucash-on-windows.git/ci-bash-script.sh"
