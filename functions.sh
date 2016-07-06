@@ -247,6 +247,11 @@ function mingw_smart_get () {
     [ "$PACKAGE" ] || return
 
     _MINGW_UDIR=`unix_path $MINGW_DIR`
+    _MSYS_UDIR=`unix_path $MSYS_DIR`
+
+    # Ensure that we use the correct awk, as the script is otherwise
+    # buggy on the CI server
+    _AWK=$_MSYS_UDIR/bin/awk.exe
 
     # Check if a package has already been installed or not. This is
     # a workaround for mingw-get's unfortunate refusal to upgrade a
@@ -263,7 +268,7 @@ function mingw_smart_get () {
     #       configurations for the tool).
 
     echo "Checking package status..."
-    COMPONENTS="$(mingw-get show "$PACKAGE" | awk '/Components:/' -)"
+    COMPONENTS="$(mingw-get show "$PACKAGE" | $_AWK '/Components:/' -)"
     if [ -n "$COMPONENTS" ]
     then
         # This package has subcomponents, we need to test
@@ -283,9 +288,9 @@ function mingw_smart_get () {
         SUBPACKAGE="$PACKAGE"
     fi
     echo "Checking $SUBPACKAGE versions"
-    INSTVERSION="$(mingw-get show "$SUBPACKAGE" | awk '/Installed Version:/' -)"
+    INSTVERSION="$(mingw-get show "$SUBPACKAGE" | $_AWK '/Installed Version:/' -)"
     INSTVERSION="${INSTVERSION#Installed Version:  }"
-    REPOVERSION="$(mingw-get show "$SUBPACKAGE" | awk '/Repository Version:/' -)"
+    REPOVERSION="$(mingw-get show "$SUBPACKAGE" | $_AWK '/Repository Version:/' -)"
     REPOVERSION="${REPOVERSION#Repository Version: }"
 
     # If a version string is given add add it to the package name
@@ -301,7 +306,7 @@ function mingw_smart_get () {
         # Package not yet installed
         echo "installing $PACKAGE"
         mingw-get install ${PACKAGE}
-    elif [ -n "$VERSION" ] && [ -z "$(echo "$INSTVERSION" | awk "/$VERSION/" -)" ]
+    elif [ -n "$VERSION" ] && [ -z "$(echo "$INSTVERSION" | $_AWK "/$VERSION/" -)" ]
     then
         # Requested version differs from installed version
         echo "upgrading $PACKAGE from $INSTVERSION to $VERSION"
