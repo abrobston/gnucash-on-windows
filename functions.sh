@@ -263,7 +263,7 @@ function mingw_smart_get () {
     #       configurations for the tool).
 
     echo "Checking package status..."
-    COMPONENTS="$(mingw-get show "$PACKAGE" | awk '/Components:/')"
+    COMPONENTS="$(mingw-get show "$PACKAGE" | awk '/Components:/' -)"
     if [ -n "$COMPONENTS" ]
     then
         # This package has subcomponents, we need to test
@@ -283,9 +283,9 @@ function mingw_smart_get () {
         SUBPACKAGE="$PACKAGE"
     fi
     echo "Checking $SUBPACKAGE versions"
-    INSTVERSION="$(mingw-get show "$SUBPACKAGE" | awk '/Installed Version:/')"
+    INSTVERSION="$(mingw-get show "$SUBPACKAGE" | awk '/Installed Version:/' -)"
     INSTVERSION="${INSTVERSION#Installed Version:  }"
-    REPOVERSION="$(mingw-get show "$SUBPACKAGE" | awk '/Repository Version:/')"
+    REPOVERSION="$(mingw-get show "$SUBPACKAGE" | awk '/Repository Version:/' -)"
     REPOVERSION="${REPOVERSION#Repository Version: }"
 
     # If a version string is given add add it to the package name
@@ -301,7 +301,7 @@ function mingw_smart_get () {
         # Package not yet installed
         echo "installing $PACKAGE"
         mingw-get install ${PACKAGE}
-    elif [ -n "$VERSION" ] && [ -z "$(echo "$INSTVERSION" | awk "/$VERSION/")" ]
+    elif [ -n "$VERSION" ] && [ -z "$(echo "$INSTVERSION" | awk "/$VERSION/" -)" ]
     then
         # Requested version differs from installed version
         echo "upgrading $PACKAGE from $INSTVERSION to $VERSION"
